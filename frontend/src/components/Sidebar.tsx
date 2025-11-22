@@ -292,24 +292,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
             onDrop={(e) => {
               e.preventDefault();
               setIsTrashDragOver(false);
-              const trashId = collections.find(c => c.name === 'Trash')?.id;
-              if (trashId) {
-                onDrop?.(e, trashId);
-              } else {
-                onDrop?.(e, 'TRASH');
-              }
+              onDrop?.(e, 'trash');
             }}
             onClick={() => {
-              const trashCollection = collections.find(c => c.name === 'Trash');
-              if (trashCollection) {
-                navigate(`/collections?id=${trashCollection.id}`);
-              } else {
-                onCreateCollection('Trash');
-              }
+              navigate('/collections?id=trash');
             }}
             className={clsx(
               "w-full flex items-center gap-3 px-3 py-2 text-sm font-bold rounded-xl transition-all duration-200 border-2 border-black dark:border-neutral-700 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)] mb-4",
-              collections.find(c => c.name === 'Trash')?.id === selectedCollectionId || isTrashDragOver
+              selectedCollectionId === 'trash' || isTrashDragOver
                 ? "bg-rose-50 dark:bg-rose-900/30 text-rose-900 dark:text-rose-300 -translate-y-0.5"
                 : "bg-white dark:bg-neutral-900 text-slate-900 dark:text-neutral-200 hover:bg-rose-50 dark:hover:bg-rose-900/30 hover:text-rose-900 dark:hover:text-rose-300 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)] hover:-translate-y-0.5"
             )}

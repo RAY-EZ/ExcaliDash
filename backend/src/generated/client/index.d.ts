@@ -1918,6 +1918,7 @@ export namespace Prisma {
     name: string | null
     elements: string | null
     appState: string | null
+    preview: string | null
     version: number | null
     collectionId: string | null
     createdAt: Date | null
@@ -1929,6 +1930,7 @@ export namespace Prisma {
     name: string | null
     elements: string | null
     appState: string | null
+    preview: string | null
     version: number | null
     collectionId: string | null
     createdAt: Date | null
@@ -1940,6 +1942,7 @@ export namespace Prisma {
     name: number
     elements: number
     appState: number
+    preview: number
     version: number
     collectionId: number
     createdAt: number
@@ -1961,6 +1964,7 @@ export namespace Prisma {
     name?: true
     elements?: true
     appState?: true
+    preview?: true
     version?: true
     collectionId?: true
     createdAt?: true
@@ -1972,6 +1976,7 @@ export namespace Prisma {
     name?: true
     elements?: true
     appState?: true
+    preview?: true
     version?: true
     collectionId?: true
     createdAt?: true
@@ -1983,6 +1988,7 @@ export namespace Prisma {
     name?: true
     elements?: true
     appState?: true
+    preview?: true
     version?: true
     collectionId?: true
     createdAt?: true
@@ -2081,6 +2087,7 @@ export namespace Prisma {
     name: string
     elements: string
     appState: string
+    preview: string | null
     version: number
     collectionId: string | null
     createdAt: Date
@@ -2111,6 +2118,7 @@ export namespace Prisma {
     name?: boolean
     elements?: boolean
     appState?: boolean
+    preview?: boolean
     version?: boolean
     collectionId?: boolean
     createdAt?: boolean
@@ -2123,6 +2131,7 @@ export namespace Prisma {
     name?: boolean
     elements?: boolean
     appState?: boolean
+    preview?: boolean
     version?: boolean
     collectionId?: boolean
     createdAt?: boolean
@@ -2135,6 +2144,7 @@ export namespace Prisma {
     name?: boolean
     elements?: boolean
     appState?: boolean
+    preview?: boolean
     version?: boolean
     collectionId?: boolean
     createdAt?: boolean
@@ -2158,6 +2168,7 @@ export namespace Prisma {
       name: string
       elements: string
       appState: string
+      preview: string | null
       version: number
       collectionId: string | null
       createdAt: Date
@@ -2560,6 +2571,7 @@ export namespace Prisma {
     readonly name: FieldRef<"Drawing", 'String'>
     readonly elements: FieldRef<"Drawing", 'String'>
     readonly appState: FieldRef<"Drawing", 'String'>
+    readonly preview: FieldRef<"Drawing", 'String'>
     readonly version: FieldRef<"Drawing", 'Int'>
     readonly collectionId: FieldRef<"Drawing", 'String'>
     readonly createdAt: FieldRef<"Drawing", 'DateTime'>
@@ -2935,6 +2947,7 @@ export namespace Prisma {
     name: 'name',
     elements: 'elements',
     appState: 'appState',
+    preview: 'preview',
     version: 'version',
     collectionId: 'collectionId',
     createdAt: 'createdAt',
@@ -3054,6 +3067,7 @@ export namespace Prisma {
     name?: StringFilter<"Drawing"> | string
     elements?: StringFilter<"Drawing"> | string
     appState?: StringFilter<"Drawing"> | string
+    preview?: StringNullableFilter<"Drawing"> | string | null
     version?: IntFilter<"Drawing"> | number
     collectionId?: StringNullableFilter<"Drawing"> | string | null
     createdAt?: DateTimeFilter<"Drawing"> | Date | string
@@ -3066,6 +3080,7 @@ export namespace Prisma {
     name?: SortOrder
     elements?: SortOrder
     appState?: SortOrder
+    preview?: SortOrderInput | SortOrder
     version?: SortOrder
     collectionId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -3081,6 +3096,7 @@ export namespace Prisma {
     name?: StringFilter<"Drawing"> | string
     elements?: StringFilter<"Drawing"> | string
     appState?: StringFilter<"Drawing"> | string
+    preview?: StringNullableFilter<"Drawing"> | string | null
     version?: IntFilter<"Drawing"> | number
     collectionId?: StringNullableFilter<"Drawing"> | string | null
     createdAt?: DateTimeFilter<"Drawing"> | Date | string
@@ -3093,6 +3109,7 @@ export namespace Prisma {
     name?: SortOrder
     elements?: SortOrder
     appState?: SortOrder
+    preview?: SortOrderInput | SortOrder
     version?: SortOrder
     collectionId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -3112,6 +3129,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Drawing"> | string
     elements?: StringWithAggregatesFilter<"Drawing"> | string
     appState?: StringWithAggregatesFilter<"Drawing"> | string
+    preview?: StringNullableWithAggregatesFilter<"Drawing"> | string | null
     version?: IntWithAggregatesFilter<"Drawing"> | number
     collectionId?: StringNullableWithAggregatesFilter<"Drawing"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Drawing"> | Date | string
@@ -3176,6 +3194,7 @@ export namespace Prisma {
     name: string
     elements: string
     appState: string
+    preview?: string | null
     version?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -3187,6 +3206,7 @@ export namespace Prisma {
     name: string
     elements: string
     appState: string
+    preview?: string | null
     version?: number
     collectionId?: string | null
     createdAt?: Date | string
@@ -3198,6 +3218,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     elements?: StringFieldUpdateOperationsInput | string
     appState?: StringFieldUpdateOperationsInput | string
+    preview?: NullableStringFieldUpdateOperationsInput | string | null
     version?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -3209,6 +3230,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     elements?: StringFieldUpdateOperationsInput | string
     appState?: StringFieldUpdateOperationsInput | string
+    preview?: NullableStringFieldUpdateOperationsInput | string | null
     version?: IntFieldUpdateOperationsInput | number
     collectionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -3220,6 +3242,7 @@ export namespace Prisma {
     name: string
     elements: string
     appState: string
+    preview?: string | null
     version?: number
     collectionId?: string | null
     createdAt?: Date | string
@@ -3231,6 +3254,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     elements?: StringFieldUpdateOperationsInput | string
     appState?: StringFieldUpdateOperationsInput | string
+    preview?: NullableStringFieldUpdateOperationsInput | string | null
     version?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -3241,6 +3265,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     elements?: StringFieldUpdateOperationsInput | string
     appState?: StringFieldUpdateOperationsInput | string
+    preview?: NullableStringFieldUpdateOperationsInput | string | null
     version?: IntFieldUpdateOperationsInput | number
     collectionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -3334,17 +3359,6 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
-
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | null
@@ -3357,6 +3371,17 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type CollectionNullableRelationFilter = {
@@ -3374,6 +3399,7 @@ export namespace Prisma {
     name?: SortOrder
     elements?: SortOrder
     appState?: SortOrder
+    preview?: SortOrder
     version?: SortOrder
     collectionId?: SortOrder
     createdAt?: SortOrder
@@ -3389,6 +3415,7 @@ export namespace Prisma {
     name?: SortOrder
     elements?: SortOrder
     appState?: SortOrder
+    preview?: SortOrder
     version?: SortOrder
     collectionId?: SortOrder
     createdAt?: SortOrder
@@ -3400,6 +3427,7 @@ export namespace Prisma {
     name?: SortOrder
     elements?: SortOrder
     appState?: SortOrder
+    preview?: SortOrder
     version?: SortOrder
     collectionId?: SortOrder
     createdAt?: SortOrder
@@ -3408,22 +3436,6 @@ export namespace Prisma {
 
   export type DrawingSumOrderByAggregateInput = {
     version?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -3441,6 +3453,22 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type DrawingCreateNestedManyWithoutCollectionInput = {
@@ -3499,6 +3527,10 @@ export namespace Prisma {
     connect?: CollectionWhereUniqueInput
   }
 
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -3515,10 +3547,6 @@ export namespace Prisma {
     delete?: CollectionWhereInput | boolean
     connect?: CollectionWhereUniqueInput
     update?: XOR<XOR<CollectionUpdateToOneWithWhereWithoutDrawingsInput, CollectionUpdateWithoutDrawingsInput>, CollectionUncheckedUpdateWithoutDrawingsInput>
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -3602,33 +3630,6 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
-  }
-
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | null
@@ -3657,11 +3658,39 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
   export type DrawingCreateWithoutCollectionInput = {
     id?: string
     name: string
     elements: string
     appState: string
+    preview?: string | null
     version?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -3672,6 +3701,7 @@ export namespace Prisma {
     name: string
     elements: string
     appState: string
+    preview?: string | null
     version?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -3710,6 +3740,7 @@ export namespace Prisma {
     name?: StringFilter<"Drawing"> | string
     elements?: StringFilter<"Drawing"> | string
     appState?: StringFilter<"Drawing"> | string
+    preview?: StringNullableFilter<"Drawing"> | string | null
     version?: IntFilter<"Drawing"> | number
     collectionId?: StringNullableFilter<"Drawing"> | string | null
     createdAt?: DateTimeFilter<"Drawing"> | Date | string
@@ -3765,6 +3796,7 @@ export namespace Prisma {
     name: string
     elements: string
     appState: string
+    preview?: string | null
     version?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -3775,6 +3807,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     elements?: StringFieldUpdateOperationsInput | string
     appState?: StringFieldUpdateOperationsInput | string
+    preview?: NullableStringFieldUpdateOperationsInput | string | null
     version?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -3785,6 +3818,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     elements?: StringFieldUpdateOperationsInput | string
     appState?: StringFieldUpdateOperationsInput | string
+    preview?: NullableStringFieldUpdateOperationsInput | string | null
     version?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -3795,6 +3829,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     elements?: StringFieldUpdateOperationsInput | string
     appState?: StringFieldUpdateOperationsInput | string
+    preview?: NullableStringFieldUpdateOperationsInput | string | null
     version?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

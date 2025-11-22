@@ -131,6 +131,7 @@ exports.Prisma.DrawingScalarFieldEnum = {
   name: 'name',
   elements: 'elements',
   appState: 'appState',
+  preview: 'preview',
   version: 'version',
   collectionId: 'collectionId',
   createdAt: 'createdAt',

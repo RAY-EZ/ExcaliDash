@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import { Excalidraw, convertToExcalidrawElements } from '@excalidraw/excalidraw';
+import { Excalidraw, convertToExcalidrawElements, exportToSvg } from '@excalidraw/excalidraw';
 import '@excalidraw/excalidraw/index.css';
 import debounce from 'lodash/debounce';
 import { Toaster, toast } from 'sonner';
@@ -37,10 +37,24 @@ export const Editor: React.FC = () => {
         viewBackgroundColor: appState.viewBackgroundColor,
         gridSize: appState.gridSize,
       };
+
+      // Generate preview
+      const files = excalidrawAPI.current?.getFiles() || null;
+      const svg = await exportToSvg({
+        elements,
+        appState: {
+          ...appState,
+          exportBackground: true,
+          viewBackgroundColor: appState.viewBackgroundColor || '#ffffff',
+        },
+        files,
+      });
+      const preview = svg.outerHTML;
       
       await api.updateDrawing(id, {
         elements,
         appState: persistableAppState,
+        preview,
       });
     } catch (err) {
       console.error('Failed to save drawing', err);

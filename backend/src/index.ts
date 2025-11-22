@@ -8,7 +8,8 @@ import { PrismaClient } from "./generated/client";
 dotenv.config();
 
 // Ensure DATABASE_URL is absolute to avoid relative path issues with generated client
-const dbPath = path.resolve(__dirname, "../dev.db");
+// Point to the same DB file as Prisma CLI (relative to schema.prisma, usually in prisma/ folder)
+const dbPath = path.resolve(__dirname, "../prisma/dev.db");
 process.env.DATABASE_URL = `file:${dbPath}`;
 console.log("Resolved DATABASE_URL:", process.env.DATABASE_URL);
 
@@ -35,6 +36,12 @@ app.get("/drawings", async (req, res) => {
       where.collectionId = null;
     } else if (collectionId) {
       where.collectionId = String(collectionId);
+    } else {
+      // Default: Exclude trash, but include unorganized (null)
+      where.OR = [
+        { collectionId: { not: "trash" } },
+        { collectionId: null },
+      ];
     }
 
     const drawings = await prisma.drawing.findMany({
@@ -79,7 +86,7 @@ app.get("/drawings/:id", async (req, res) => {
 // POST /drawings
 app.post("/drawings", async (req, res) => {
   try {
-    const { name, elements, appState, collectionId } = req.body;
+    const { name, elements, appState, collectionId, preview } = req.body;
 
     const newDrawing = await prisma.drawing.create({
       data: {
@@ -87,6 +94,7 @@ app.post("/drawings", async (req, res) => {
         elements: JSON.stringify(elements || []),
         appState: JSON.stringify(appState || {}),
         collectionId: collectionId || null,
+        preview: preview || null,
       },
     });
 
@@ -104,7 +112,7 @@ app.post("/drawings", async (req, res) => {
 app.put("/drawings/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, elements, appState, collectionId } = req.body;
+    const { name, elements, appState, collectionId, preview } = req.body;
 
     const data: any = {
       version: { increment: 1 },
@@ -114,6 +122,7 @@ app.put("/drawings/:id", async (req, res) => {
     if (elements !== undefined) data.elements = JSON.stringify(elements);
     if (appState !== undefined) data.appState = JSON.stringify(appState);
     if (collectionId !== undefined) data.collectionId = collectionId;
+    if (preview !== undefined) data.preview = preview;
 
     const updatedDrawing = await prisma.drawing.update({
       where: { id },
@@ -236,6 +245,24 @@ app.delete("/collections/:id", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
+// Ensure Trash collection exists
+const ensureTrashCollection = async () => {
+  try {
+    const trash = await prisma.collection.findUnique({
+      where: { id: "trash" },
+    });
+    if (!trash) {
+      await prisma.collection.create({
+        data: { id: "trash", name: "Trash" },
+      });
+      console.log("Created Trash collection");
+    }
+  } catch (error) {
+    console.error("Failed to ensure Trash collection:", error);
+  }
+};
+
+app.listen(PORT, async () => {
+  await ensureTrashCollection();
   console.log(`Server running on port ${PORT}`);
 });

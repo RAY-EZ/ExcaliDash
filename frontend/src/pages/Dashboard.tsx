@@ -267,15 +267,7 @@ export const Dashboard: React.FC = () => {
   };
 
   // Trash Helpers
-  const trashCollection = collections.find(c => c.name === 'Trash');
-  const isTrashView = selectedCollectionId === trashCollection?.id && trashCollection !== undefined;
-
-  const getOrCreateTrashId = async () => {
-    if (trashCollection) return trashCollection.id;
-    const newCol = await api.createCollection('Trash');
-    setCollections(prev => [...prev, newCol]);
-    return newCol.id;
-  };
+  const isTrashView = selectedCollectionId === 'trash';
 
   const handleCreateDrawing = async () => {
     if (isTrashView) return;
@@ -300,7 +292,7 @@ export const Dashboard: React.FC = () => {
       setDrawingToDelete(id);
     } else {
       // Move to Trash -> No Confirm
-      const trashId = await getOrCreateTrashId();
+      const trashId = 'trash';
 
       // Optimistic Remove from current view
       setDrawings(prev => prev.filter(d => d.id !== id));
@@ -373,7 +365,7 @@ export const Dashboard: React.FC = () => {
   };
 
   const executeBulkMoveToTrash = async () => {
-    const trashId = await getOrCreateTrashId();
+    const trashId = 'trash';
     const ids = Array.from(selectedIds);
 
     setDrawings(prev => prev.filter(d => !selectedIds.has(d.id)));
@@ -489,6 +481,7 @@ export const Dashboard: React.FC = () => {
   const viewTitle = React.useMemo(() => {
     if (selectedCollectionId === undefined) return "All Drawings";
     if (selectedCollectionId === null) return "Unorganized";
+    if (selectedCollectionId === 'trash') return "Trash";
     const collection = collections.find(c => c.id === selectedCollectionId);
     return collection ? collection.name : "Collection";
   }, [selectedCollectionId, collections]);
@@ -589,9 +582,12 @@ export const Dashboard: React.FC = () => {
     setDrawings(prev => prev.map(d => d.id === id ? { ...d, preview } : d));
   };
 
+  // Filter out trash from the collections list passed to sidebar
+  const visibleCollections = React.useMemo(() => collections.filter(c => c.id !== 'trash'), [collections]);
+
   return (
     <Layout
-      collections={collections}
+      collections={visibleCollections}
       selectedCollectionId={selectedCollectionId}
       onSelectCollection={setSelectedCollectionId}
       onCreateCollection={handleCreateCollection}
