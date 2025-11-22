@@ -5,6 +5,8 @@
 A beautiful, self hosted dashboard and organizer for [Excalidraw](https://github.com/excalidraw/excalidraw) with live collaboration.
 ![](dashboard.png)
 
+![](demo.gif)
+
 [Features](#Features)
 
 [Installation](#Installation)
