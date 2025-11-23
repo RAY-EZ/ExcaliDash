@@ -54,6 +54,7 @@ echo -e "${BLUE}Building and pushing backend pre-release image...${NC}"
 docker buildx build \
     --platform linux/amd64,linux/arm64 \
     --tag $DOCKER_USERNAME/$IMAGE_NAME-backend:$VERSION \
+    --tag $DOCKER_USERNAME/$IMAGE_NAME-backend:dev \
     --file backend/Dockerfile \
     --push \
     backend/
@@ -66,6 +67,7 @@ echo -e "${BLUE}Building and pushing frontend pre-release image...${NC}"
 docker buildx build \
     --platform linux/amd64,linux/arm64 \
     --tag $DOCKER_USERNAME/$IMAGE_NAME-frontend:$VERSION \
+    --tag $DOCKER_USERNAME/$IMAGE_NAME-frontend:dev \
     --file frontend/Dockerfile \
     --push \
     frontend/
@@ -79,5 +81,7 @@ echo -e "${BLUE}===========================================${NC}"
 echo ""
 echo -e "${YELLOW}Images published:${NC}"
 echo -e "  • $DOCKER_USERNAME/$IMAGE_NAME-backend:$VERSION"
+echo -e "  • $DOCKER_USERNAME/$IMAGE_NAME-backend:dev"
 echo -e "  • $DOCKER_USERNAME/$IMAGE_NAME-frontend:$VERSION"
+echo -e "  • $DOCKER_USERNAME/$IMAGE_NAME-frontend:dev"
 echo ""
