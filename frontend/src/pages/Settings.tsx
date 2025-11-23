@@ -214,7 +214,7 @@ export const Settings: React.FC = () => {
                     <div className="text-center">
                         <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1">Version Info</h3>
                         <div className="text-sm text-slate-500 dark:text-neutral-400 font-medium flex flex-col items-center gap-1">
-                            <span className="font-mono text-base text-slate-900 dark:text-white">
+                            <span className="text-base text-slate-900 dark:text-white">
                                 {appVersion}
                             </span>
                             {buildLabel && (

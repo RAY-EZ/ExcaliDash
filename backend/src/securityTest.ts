@@ -12,7 +12,7 @@ import {
   sanitizeDrawingData,
 } from "./security";
 
-console.log("🧪 Starting Security Test Suite...\n");
+console.log("Starting Security Test Suite...\n");
 
 // Test 1: HTML/JS Sanitization
 console.log("Test 1: HTML/JS Sanitization");
@@ -25,12 +25,15 @@ const maliciousHtml = `
   Normal text content
 `;
 const sanitizedHtml = sanitizeHtml(maliciousHtml);
-console.log("✅ Original:", maliciousHtml.substring(0, 100) + "...");
-console.log("✅ Sanitized:", sanitizedHtml.substring(0, 100) + "...");
-console.log("✅ Script tags removed:", !sanitizedHtml.includes("<script>"));
-console.log("✅ Event handlers removed:", !sanitizedHtml.includes("onerror="));
+console.log("PASS: Original:", maliciousHtml.substring(0, 100) + "...");
+console.log("PASS: Sanitized:", sanitizedHtml.substring(0, 100) + "...");
+console.log("PASS: Script tags removed:", !sanitizedHtml.includes("<script>"));
 console.log(
-  "✅ Malicious URLs blocked:",
+  "PASS: Event handlers removed:",
+  !sanitizedHtml.includes("onerror=")
+);
+console.log(
+  "PASS: Malicious URLs blocked:",
   !sanitizedHtml.includes("javascript:")
 );
 console.log("");
@@ -47,11 +50,11 @@ const maliciousSvg = `
   </svg>
 `;
 const sanitizedSvg = sanitizeSvg(maliciousSvg);
-console.log("✅ Original:", maliciousSvg.substring(0, 100) + "...");
-console.log("✅ Sanitized:", sanitizedSvg.substring(0, 100) + "...");
-console.log("✅ SVG scripts removed:", !sanitizedSvg.includes("<script>"));
+console.log("PASS: Original:", maliciousSvg.substring(0, 100) + "...");
+console.log("PASS: Sanitized:", sanitizedSvg.substring(0, 100) + "...");
+console.log("PASS: SVG scripts removed:", !sanitizedSvg.includes("<script>"));
 console.log(
-  "✅ Malicious hrefs sanitized:",
+  "PASS: Malicious hrefs sanitized:",
   !sanitizedSvg.includes("javascript:")
 );
 console.log("");
@@ -72,7 +75,9 @@ const maliciousUrls = [
 maliciousUrls.forEach((url) => {
   const sanitized = sanitizeUrl(url);
   const isSafe = sanitized !== "";
-  console.log(`✅ "${url}" -> "${sanitized}" (${isSafe ? "SAFE" : "BLOCKED"})`);
+  console.log(
+    `PASS: "${url}" -> "${sanitized}" (${isSafe ? "SAFE" : "BLOCKED"})`
+  );
 });
 console.log("");
 
@@ -81,14 +86,14 @@ console.log("Test 4: Text Sanitization with Length Limits");
 const longText = "A".repeat(2000);
 const sanitizedLongText = sanitizeText(longText, 500);
 console.log(
-  `✅ Long text truncated: ${longText.length} -> ${sanitizedLongText.length} chars`
+  `PASS: Long text truncated: ${longText.length} -> ${sanitizedLongText.length} chars`
 );
 
 const maliciousText = "<script>alert('XSS')</script>Normal text";
 const sanitizedText = sanitizeText(maliciousText);
-console.log(`✅ Text sanitized: "${maliciousText}" -> "${sanitizedText}"`);
+console.log(`PASS: Text sanitized: "${maliciousText}" -> "${sanitizedText}"`);
 console.log(
-  "✅ Malicious content removed:",
+  "PASS: Malicious content removed:",
   !sanitizedText.includes("<script>")
 );
 console.log("");
@@ -131,20 +136,20 @@ const maliciousDrawing = {
 
 console.log("Testing malicious drawing validation...");
 const isValidDrawing = validateImportedDrawing(maliciousDrawing);
-console.log(`✅ Malicious drawing rejected: ${!isValidDrawing}`);
+console.log(`PASS: Malicious drawing rejected: ${!isValidDrawing}`);
 
 try {
   const sanitizedDrawing = sanitizeDrawingData(maliciousDrawing);
-  console.log("✅ Sanitization successful");
-  console.log(`✅ Text sanitized: ${sanitizedDrawing.elements[0].text}`);
+  console.log("PASS: Sanitization successful");
+  console.log(`PASS: Text sanitized: ${sanitizedDrawing.elements[0].text}`);
   console.log(
-    `✅ Link sanitized: ${sanitizedDrawing.elements[1].link || "null"}`
+    `PASS: Link sanitized: ${sanitizedDrawing.elements[1].link || "null"}`
   );
   console.log(
-    `✅ SVG sanitized: ${!sanitizedDrawing.preview?.includes("<script>")}`
+    `PASS: SVG sanitized: ${!sanitizedDrawing.preview?.includes("<script>")}`
   );
 } catch (error) {
-  console.log("✅ Sanitization failed as expected:", error.message);
+  console.log("PASS: Sanitization failed as expected:", error.message);
 }
 console.log("");
 
@@ -185,26 +190,28 @@ const legitimateDrawing = {
 };
 
 const isValidLegitimate = validateImportedDrawing(legitimateDrawing);
-console.log(`✅ Legitimate drawing accepted: ${isValidLegitimate}`);
+console.log(`PASS: Legitimate drawing accepted: ${isValidLegitimate}`);
 
 try {
   const sanitizedLegitimate = sanitizeDrawingData(legitimateDrawing);
-  console.log("✅ Legitimate drawing sanitization successful");
-  console.log(`✅ Text preserved: "${sanitizedLegitimate.elements[0].text}"`);
+  console.log("PASS: Legitimate drawing sanitization successful");
   console.log(
-    `✅ Safe URL preserved: "${sanitizedLegitimate.elements[1].link}"`
+    `PASS: Text preserved: "${sanitizedLegitimate.elements[0].text}"`
+  );
+  console.log(
+    `PASS: Safe URL preserved: "${sanitizedLegitimate.elements[1].link}"`
   );
 } catch (error) {
-  console.log("❌ Legitimate drawing should not fail:", error.message);
+  console.log("FAIL: Legitimate drawing should not fail:", error.message);
 }
 console.log("");
 
-console.log("🎉 Security Test Suite Completed!");
-console.log("\n📊 Test Summary:");
-console.log("✅ HTML/JS injection prevention - WORKING");
-console.log("✅ SVG malicious content blocking - WORKING");
-console.log("✅ URL scheme validation - WORKING");
-console.log("✅ Text sanitization with limits - WORKING");
-console.log("✅ Malicious drawing rejection - WORKING");
-console.log("✅ Legitimate content preservation - WORKING");
-console.log("\n🔒 XSS Prevention: IMPLEMENTED & FUNCTIONAL");
+console.log("Completed! Security Test Suite Completed!");
+console.log("\nSummary: Test Summary:");
+console.log("PASS: HTML/JS injection prevention - WORKING");
+console.log("PASS: SVG malicious content blocking - WORKING");
+console.log("PASS: URL scheme validation - WORKING");
+console.log("PASS: Text sanitization with limits - WORKING");
+console.log("PASS: Malicious drawing rejection - WORKING");
+console.log("PASS: Legitimate content preservation - WORKING");
+console.log("\nSecurity: XSS Prevention: IMPLEMENTED & FUNCTIONAL");

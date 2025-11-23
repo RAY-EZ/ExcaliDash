@@ -1,8 +1,8 @@
-# ExcaliDash v0.1.3
+# ExcaliDash v0.1.4
 
 **Type:** Security Release  
 **Date:** 2025-11-23  
-**Compatibility:** v0.1.0 (Backward Compatible)
+**Compatibility:** v0.1.x (Backward Compatible)
 
 ## Security Fixes
 
