@@ -3,7 +3,7 @@ import { Layout } from '../components/Layout';
 import { useNavigate } from 'react-router-dom';
 import * as api from '../api';
 import type { Collection } from '../types';
-import { Database, FileJson, Upload, Moon, Sun } from 'lucide-react';
+import { Database, FileJson, Upload, Moon, Sun, Info } from 'lucide-react';
 import { ConfirmModal } from '../components/ConfirmModal';
 import { importDrawings } from '../utils/importUtils';
 import { useTheme } from '../context/ThemeContext';
@@ -17,6 +17,9 @@ export const Settings: React.FC = () => {
     const [importConfirmation, setImportConfirmation] = useState<{ isOpen: boolean; file: File | null }>({ isOpen: false, file: null });
     const [importError, setImportError] = useState<{ isOpen: boolean; message: string }>({ isOpen: false, message: '' });
     const [importSuccess, setImportSuccess] = useState(false);
+
+    const appVersion = import.meta.env.VITE_APP_VERSION || 'Unknown version';
+    const buildLabel = import.meta.env.VITE_APP_BUILD_LABEL;
 
     useEffect(() => {
         const fetchCollections = async () => {
@@ -203,7 +206,25 @@ export const Settings: React.FC = () => {
                     </button>
                 </div>
 
-
+                {/* Version Info */}
+                <div className="flex flex-col items-center justify-center gap-4 p-8 bg-white dark:bg-neutral-900 border-2 border-black dark:border-neutral-700 rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)]">
+                    <div className="w-16 h-16 bg-gray-50 dark:bg-neutral-800 rounded-2xl flex items-center justify-center border-2 border-gray-100 dark:border-neutral-700">
+                        <Info size={32} className="text-gray-600 dark:text-gray-400" />
+                    </div>
+                    <div className="text-center">
+                        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1">Version Info</h3>
+                        <div className="text-sm text-slate-500 dark:text-neutral-400 font-medium flex flex-col items-center gap-1">
+                            <span className="font-mono text-base text-slate-900 dark:text-white">
+                                {appVersion}
+                            </span>
+                            {buildLabel && (
+                                <span className="text-xs uppercase tracking-wide text-red-500 dark:text-red-400">
+                                    {buildLabel}
+                                </span>
+                            )}
+                        </div>
+                    </div>
+                </div>
             </div>
 
             {/* Modals */}

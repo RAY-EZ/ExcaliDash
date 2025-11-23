@@ -1,17 +1,32 @@
 #!/bin/bash
 set -e
 
-# Configuration
-DOCKER_USERNAME="zimengxiong"
-IMAGE_NAME="excalidash"
-VERSION=${1:-$(node -e "try { console.log(require('fs').readFileSync('VERSION', 'utf8').trim() + '-dev') } catch { console.log('pre-release') }")}
-
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
+
+# Branch validation - only allow pre-release branch
+echo -e "${YELLOW}Validating branch...${NC}"
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+ALLOWED_BRANCH="pre-release"
+
+if [ "$CURRENT_BRANCH" != "$ALLOWED_BRANCH" ]; then
+    echo -e "${RED}ERROR: This script can only be run on the '$ALLOWED_BRANCH' branch!${NC}"
+    echo -e "${RED}Current branch: '$CURRENT_BRANCH'${NC}"
+    echo -e "${YELLOW}Please switch to the '$ALLOWED_BRANCH' branch and try again.${NC}"
+    exit 1
+fi
+
+echo -e "${GREEN}✓ Branch validation passed - running on '$CURRENT_BRANCH' branch${NC}"
+echo ""
+
+# Configuration
+DOCKER_USERNAME="zimengxiong"
+IMAGE_NAME="excalidash"
+VERSION=${1:-$(node -e "try { console.log(require('fs').readFileSync('VERSION', 'utf8').trim() + '-dev') } catch { console.log('pre-release') }")}
 
 echo -e "${BLUE}===========================================${NC}"
 echo -e "${BLUE}ExcaliDash Pre-Release Docker Builder${NC}"
@@ -68,9 +83,10 @@ docker buildx build \
     --platform linux/amd64,linux/arm64 \
     --tag $DOCKER_USERNAME/$IMAGE_NAME-frontend:$VERSION \
     --tag $DOCKER_USERNAME/$IMAGE_NAME-frontend:dev \
+    --build-arg VITE_APP_VERSION=$VERSION \
     --file frontend/Dockerfile \
     --push \
-    frontend/
+    .
 
 echo -e "${GREEN}✓ Frontend pre-release image pushed successfully${NC}"
 
