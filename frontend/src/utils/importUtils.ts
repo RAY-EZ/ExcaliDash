@@ -1,10 +1,17 @@
 import { exportToSvg } from "@excalidraw/excalidraw";
-import { API_URL } from "../api";
+import { api } from "../api";
+import { type UploadStatus } from "../context/UploadContext";
 
 export const importDrawings = async (
   files: File[],
   targetCollectionId: string | null,
-  onSuccess?: () => void | Promise<void>
+  onSuccess?: () => void | Promise<void>,
+  onProgress?: (
+    fileIndex: number,
+    status: UploadStatus,
+    progress: number,
+    error?: string
+  ) => void
 ) => {
   const drawingFiles = files.filter(
     (f) => f.name.endsWith(".json") || f.name.endsWith(".excalidraw")
@@ -18,9 +25,21 @@ export const importDrawings = async (
   let failCount = 0;
   const errors: string[] = [];
 
+  // Build a map from drawingFile index to original file index for progress reporting
+  const originalIndexMap = new Map<number, number>();
+  drawingFiles.forEach((df, i) => {
+    const originalIndex = files.indexOf(df);
+    originalIndexMap.set(i, originalIndex);
+  });
+
+  // We process files in parallel (Promise.all) but we could limit concurrency if needed.
+  // For now, full parallel is fine as browser limits connection count anyway.
   await Promise.all(
-    drawingFiles.map(async (file) => {
+    drawingFiles.map(async (file, drawingIndex) => {
+      const fileIndex = originalIndexMap.get(drawingIndex) ?? drawingIndex;
       try {
+        if (onProgress) onProgress(fileIndex, 'processing', 0); // Parsing phase
+
         const text = await file.text();
         const data = JSON.parse(text);
 
@@ -50,21 +69,36 @@ export const importDrawings = async (
           preview: svg.outerHTML,
         };
 
-        const res = await fetch(`${API_URL}/drawings`, {
-          method: "POST",
+        if (onProgress) onProgress(fileIndex, 'uploading', 0);
+
+        await api.post("/drawings", payload, {
           headers: {
-            "Content-Type": "application/json",
+            // Backend uses this header to apply stricter validation for imported files.
             "X-Imported-File": "true",
           },
-          body: JSON.stringify(payload),
+          onUploadProgress: (progressEvent) => {
+            if (onProgress && progressEvent.total) {
+              const percentCompleted = Math.round(
+                (progressEvent.loaded * 100) / progressEvent.total
+              );
+              onProgress(fileIndex, 'uploading', percentCompleted);
+            }
+          },
         });
 
-        if (!res.ok) throw new Error("API Error");
+        if (onProgress) onProgress(fileIndex, 'success', 100);
         successCount++;
+
       } catch (err: any) {
         console.error(`Failed to import ${file.name}:`, err);
         failCount++;
-        errors.push(`${file.name}: ${err.message}`);
+        const errorMessage =
+          err?.response?.data?.message ||
+          err?.response?.data?.error ||
+          err?.message ||
+          "Upload failed";
+        errors.push(`${file.name}: ${errorMessage}`);
+        if (onProgress) onProgress(fileIndex, 'error', 0, errorMessage);
       }
     })
   );

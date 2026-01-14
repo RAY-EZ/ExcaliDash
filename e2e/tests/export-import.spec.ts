@@ -1,12 +1,10 @@
 import { test, expect } from "@playwright/test";
-import * as fs from "fs";
-import * as path from "path";
 import {
   API_URL,
   createDrawing,
   deleteDrawing,
+  getCsrfHeaders,
   listDrawings,
-  createCollection,
   deleteCollection,
 } from "./helpers/api";
 
@@ -29,7 +27,7 @@ test.describe("Export Functionality", () => {
     for (const id of createdDrawingIds) {
       try {
         await deleteDrawing(request, id);
-      } catch (e) {
+      } catch {
         // Ignore cleanup errors
       }
     }
@@ -38,7 +36,7 @@ test.describe("Export Functionality", () => {
     for (const id of createdCollectionIds) {
       try {
         await deleteCollection(request, id);
-      } catch (e) {
+      } catch {
         // Ignore cleanup errors
       }
     }
@@ -85,11 +83,11 @@ test.describe("Export Functionality", () => {
     // Test JSON/ZIP export endpoint - it returns a ZIP file with .excalidraw files
     const zipResponse = await request.get(`${API_URL}/export/json`);
     expect(zipResponse.ok()).toBe(true);
-    
+
     // Check it's a ZIP file
     const contentType = zipResponse.headers()["content-type"];
     expect(contentType).toMatch(/application\/zip/);
-    
+
     // Check content-disposition header
     const contentDisposition = zipResponse.headers()["content-disposition"];
     expect(contentDisposition).toContain("attachment");
@@ -103,11 +101,11 @@ test.describe("Export Functionality", () => {
     // Test SQLite export endpoint
     const sqliteResponse = await request.get(`${API_URL}/export`);
     expect(sqliteResponse.ok()).toBe(true);
-    
+
     // Check content-type header indicates a file download
     const contentType = sqliteResponse.headers()["content-type"];
     expect(contentType).toMatch(/application\/octet-stream|application\/x-sqlite3/);
-    
+
     // Check content-disposition header
     const contentDisposition = sqliteResponse.headers()["content-disposition"];
     expect(contentDisposition).toContain("attachment");
@@ -121,7 +119,7 @@ test.describe("Export Functionality", () => {
     // Test .db export endpoint
     const dbResponse = await request.get(`${API_URL}/export?format=db`);
     expect(dbResponse.ok()).toBe(true);
-    
+
     const contentDisposition = dbResponse.headers()["content-disposition"];
     expect(contentDisposition).toContain("attachment");
     expect(contentDisposition).toMatch(/\.db/);
@@ -137,7 +135,7 @@ test.describe.serial("Import Functionality", () => {
     for (const drawing of testDrawings) {
       try {
         await deleteDrawing(request, drawing.id);
-      } catch (e) {
+      } catch {
         // Ignore cleanup errors
       }
     }
@@ -145,7 +143,7 @@ test.describe.serial("Import Functionality", () => {
     for (const id of createdDrawingIds) {
       try {
         await deleteDrawing(request, id);
-      } catch (e) {
+      } catch {
         // Ignore cleanup errors
       }
     }
@@ -161,7 +159,7 @@ test.describe.serial("Import Functionality", () => {
     await expect(importButton).toBeVisible();
   });
 
-  test("should import .excalidraw file from Dashboard", async ({ page, request }) => {
+  test("should import .excalidraw file from Dashboard", async ({ page }) => {
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
@@ -206,15 +204,14 @@ test.describe.serial("Import Functionality", () => {
     });
 
     // Write temp file
-    const tempDir = "/tmp";
-    const tempFile = `${tempDir}/Import_Test_${Date.now()}.excalidraw`;
-    
+    // tempFile was here
+
     // Use page.evaluate to check if we can proceed
     // Actually, Playwright has setInputFiles which can handle this
 
     // Find the import file input
     const fileInput = page.locator("#dashboard-import");
-    
+
     // Create a buffer from the fixture content
     await fileInput.setInputFiles({
       name: `Import_ExcalidrawTest_${Date.now()}.excalidraw`,
@@ -222,9 +219,8 @@ test.describe.serial("Import Functionality", () => {
       buffer: Buffer.from(fixtureContent),
     });
 
-    // Wait for success modal
-    await expect(page.getByText("Import Successful")).toBeVisible({ timeout: 10000 });
-    await page.getByRole("button", { name: "OK" }).click();
+    // Wait for upload to complete - the UploadStatus component shows "Done" when finished
+    await expect(page.getByText("Uploads (Done)")).toBeVisible({ timeout: 10000 });
 
     // Reload to ensure dashboard state reflects the newly imported drawing
     await page.reload({ waitUntil: "networkidle" });
@@ -237,13 +233,13 @@ test.describe.serial("Import Functionality", () => {
     await expect(importedCards.first()).toBeVisible({ timeout: 10000 });
   });
 
-  test("should import JSON drawing file from Dashboard", async ({ page, request }) => {
+  test("should import JSON drawing file from Dashboard", async ({ page }) => {
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
     const timestamp = Date.now();
     const testName = `Import_JSONTest_${timestamp}`;
-    
+
     // Create a valid excalidraw JSON file with required fields
     const jsonContent = JSON.stringify({
       type: "excalidraw",
@@ -283,31 +279,22 @@ test.describe.serial("Import Functionality", () => {
     });
 
     const fileInput = page.locator("#dashboard-import");
-    
+
     await fileInput.setInputFiles({
       name: `${testName}.json`,
       mimeType: "application/json",
       buffer: Buffer.from(jsonContent),
     });
 
-    // Wait for import result - could be success or failure
-    const successModal = page.getByText("Import Successful");
-    const failModal = page.getByText("Import Failed");
-    
-    await expect(successModal.or(failModal)).toBeVisible({ timeout: 15000 });
-    
-    // If we got a failure, check the error
-    if (await failModal.isVisible()) {
-      // Get the error message
-      const errorText = await page.locator(".modal, [role='dialog']").textContent();
-      console.log("Import failed with:", errorText);
-      // Still click OK to dismiss
-      await page.getByRole("button", { name: "OK" }).click();
-      // Skip the rest of the test since import failed
+    // Wait for upload to complete - the UploadStatus component shows "Done" when finished
+    await expect(page.getByText("Uploads (Done)")).toBeVisible({ timeout: 15000 });
+
+    // Check if upload failed (shows "Failed" text in the upload status)
+    const failedIndicator = page.getByText("Failed");
+    if (await failedIndicator.isVisible()) {
+      console.log("Import failed - skipping rest of test");
       return;
     }
-    
-    await page.getByRole("button", { name: "OK" }).click();
 
     // Reload to force a fresh fetch of drawings after import
     await page.reload({ waitUntil: "networkidle" });
@@ -331,16 +318,17 @@ test.describe.serial("Import Functionality", () => {
     const invalidContent = "this is not valid JSON or excalidraw format {}{}";
 
     const fileInput = page.locator("#dashboard-import");
-    
+
     await fileInput.setInputFiles({
       name: `Import_Invalid_${Date.now()}.excalidraw`,
       mimeType: "application/json",
       buffer: Buffer.from(invalidContent),
     });
 
-    // Should show error modal
-    await expect(page.getByText("Import Failed")).toBeVisible({ timeout: 10000 });
-    await page.getByRole("button", { name: "OK" }).click();
+    // Wait for upload to complete and check for failure indicator
+    await expect(page.getByText("Uploads (Done)")).toBeVisible({ timeout: 10000 });
+    // Should show "Failed" status in the upload status component
+    await expect(page.getByText("Failed")).toBeVisible();
   });
 
   test("should import multiple drawings at once", async ({ page }) => {
@@ -377,8 +365,8 @@ test.describe.serial("Import Functionality", () => {
     const fileInput = page.locator("#dashboard-import");
     await fileInput.setInputFiles(files);
 
-    await expect(page.getByText("Import Successful")).toBeVisible({ timeout: 10000 });
-    await page.getByRole("button", { name: "OK" }).click();
+    // Wait for upload to complete - the UploadStatus component shows "Done" when finished
+    await expect(page.getByText("Uploads (Done)")).toBeVisible({ timeout: 10000 });
 
     // Verify both were imported by searching for the unique prefix
     await page.getByPlaceholder("Search drawings...").fill(searchPrefix);
@@ -394,6 +382,7 @@ test.describe("Database Import Verification", () => {
     // Test that the verification endpoint responds
     // We don't actually import a database as that would affect the test environment
     const response = await request.post(`${API_URL}/import/sqlite/verify`, {
+      headers: await getCsrfHeaders(request),
       // Send empty form data to test endpoint exists
       multipart: {
         db: {
@@ -403,7 +392,7 @@ test.describe("Database Import Verification", () => {
         },
       },
     });
-    
+
     // Should get an error response since the file is empty/invalid
     // But the endpoint should exist
     expect([400, 500]).toContain(response.status());
